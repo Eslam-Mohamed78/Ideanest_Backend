@@ -1,3 +1,4 @@
 {
-
+  "EMAIL_ALREADY_EXISTS": "البريد الإلكتروني موجود بالفعل",
+  "INVALID_CREDENTIALS": "بيانات الدخول غير صحيحة"
 }
