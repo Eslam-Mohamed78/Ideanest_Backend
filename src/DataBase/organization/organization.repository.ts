@@ -9,4 +9,8 @@ export class OrganizationRepository {
     @InjectModel(Organization.name)
     private readonly _organizationModel: Model<Organization>,
   ) {}
+
+  async create(object: object): Promise<Organization> {
+    return await this._organizationModel.create(object);
+  }
 }

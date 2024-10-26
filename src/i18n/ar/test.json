@@ -1,4 +1,8 @@
 {
   "EMAIL_ALREADY_EXISTS": "البريد الإلكتروني موجود بالفعل",
-  "INVALID_CREDENTIALS": "بيانات الدخول غير صحيحة"
+  "SIGNUP_SUCCESS": "تم التسجيل بنجاح",
+  "SIGNIN_SUCCESS": "تم تسجيل الدخول بنجاح",
+  "INVALID_CREDENTIALS": "بيانات الدخول غير صحيحة",
+  "FORBIDDEN_RESOURCE": "غير مسموح لك بالوصول",
+  "UNAUTHORIZED": "غير مصرح"
 }

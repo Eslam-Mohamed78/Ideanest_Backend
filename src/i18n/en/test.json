@@ -1,4 +1,8 @@
 {
   "EMAIL_ALREADY_EXISTS": "Email already exists",
-  "INVALID_CREDENTIALS": "Invalid credentials"
+  "SIGNUP_SUCCESS": "Signup success",
+  "SIGNIN_SUCCESS": "Signin success",
+  "INVALID_CREDENTIALS": "Invalid credentials",
+  "FORBIDDEN_RESOURCE": "Forbidden Resource",
+  "UNAUTHORIZED": "Unauthorized"
 }

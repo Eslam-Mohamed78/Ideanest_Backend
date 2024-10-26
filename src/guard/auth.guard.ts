@@ -7,11 +7,13 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UserRepository } from '../DataBase/user/user.repository';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
+    private readonly _i18n: I18nService,
     private readonly _userRepository: UserRepository,
   ) {}
 
@@ -19,23 +21,37 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
-    if (!token) throw new UnauthorizedException();
+    if (!token)
+      throw new UnauthorizedException(
+        `${this._i18n.t(`test.UNAUTHORIZED`, {
+          lang: I18nContext.current().lang,
+        })}`,
+      );
 
     try {
       const payload = this.jwtService.verify(token, {
         secret: process.env.ACCESS_TOKEN_SECRET,
       });
 
-			const isUserExists = await this._userRepository.findById(payload.userId);
+      const isUserExists = await this._userRepository.findById(payload.userId);
 
-			if (!isUserExists) throw new UnauthorizedException();
+      if (!isUserExists)
+        throw new UnauthorizedException(
+          `${this._i18n.t(`test.UNAUTHORIZED`, {
+            lang: I18nContext.current().lang,
+          })}`,
+        );
 
-			request['user'] = isUserExists;
+      request['user'] = isUserExists;
 
-			return true;
+      return true;
     } catch (error) {
-			throw new UnauthorizedException();
-		}
+      throw new UnauthorizedException(
+        `${this._i18n.t(`test.UNAUTHORIZED`, {
+          lang: I18nContext.current().lang,
+        })}`,
+      );
+    }
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

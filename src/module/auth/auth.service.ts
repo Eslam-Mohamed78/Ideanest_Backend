@@ -42,7 +42,11 @@ export class AuthService {
       access_level: UserRole.FULL_ACCESS,
     });
 
-    return { message: 'Signed up successfully' };
+    return {
+      message: `${this._i18n.t(`test.SIGNUP_SUCCESS`, {
+        lang: I18nContext.current().lang,
+      })}`,
+    };
   }
 
   async signin(body: SigninDto) {
@@ -75,7 +79,9 @@ export class AuthService {
     });
 
     return {
-      message: 'Signed in successfully',
+      message: `${this._i18n.t(`test.SIGNIN_SUCCESS`, {
+        lang: I18nContext.current().lang,
+      })}`,
       access_token,
       refresh_token: '',
     };
