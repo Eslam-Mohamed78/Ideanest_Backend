@@ -12,6 +12,7 @@ import { Types } from 'mongoose';
 import { UserRepository } from '../../DataBase/user/user.repository';
 import { SearchAndPaginationDto } from './dto/search-and-pagination.dto';
 import { Organization } from '../../DataBase/organization/organization.schema';
+import { UserRole } from '../../enum/user.enum';
 
 @Injectable()
 export class OrganizationService {
@@ -32,7 +33,7 @@ export class OrganizationService {
     return { organization_id: organization['_id'] };
   }
 
-  async readOrganization(req: any, id: Types.ObjectId) {
+  async readOrganization(req, id: Types.ObjectId) {
     // make sure the id type isn't a string
     const organization_id = new Types.ObjectId(id);
     const userId = req.user._id;
@@ -157,9 +158,10 @@ export class OrganizationService {
         })}`,
       );
 
-    const isUserExists = await this._userRepository.findOne({
-      email: user_email,
-    });
+    const isUserExists = await this._userRepository.findOneAndUpdate(
+      { email: user_email },
+      { access_level: UserRole.READ_ONLY },
+    );
 
     if (!isUserExists)
       throw new BadRequestException(

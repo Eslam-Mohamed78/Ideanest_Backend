@@ -11,5 +11,7 @@
   "NO_DATA_PROVIDED_TO_UPDATE": "No data provided to update",
   "ORGANIZATION_DELETION_SUCCESS": "Organization deletion success",
   "YOU_ARE_NOT_A_MEMBER": "You are not a member",
-  "INVALID_TOKEN": "Invalid token"
+  "INVALID_TOKEN": "Invalid token",
+  "TOKEN_REFRESHED": "Token refreshed",
+  "REFRESH_TOKEN_REVOKED": "Refresh token revoked"
 }

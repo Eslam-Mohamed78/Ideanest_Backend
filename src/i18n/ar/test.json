@@ -11,5 +11,7 @@
   "NO_DATA_PROVIDED_TO_UPDATE": "لا توجد بيانات لتحديثها",
   "ORGANIZATION_DELETION_SUCCESS": "تم حذف المنظمة بنجاح",
   "YOU_ARE_NOT_A_MEMBER": "لست عضو في المنظمة",
-  "INVALID_TOKEN": "الرمز غير صالح"
+  "INVALID_TOKEN": "الرمز غير صالح",
+  "TOKEN_REFRESHED": "تم تحديث الرمز بنجاح",
+  "REFRESH_TOKEN_REVOKED": "تم إلغاء تحديث الرمز"
 }

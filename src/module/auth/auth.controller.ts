@@ -1,10 +1,24 @@
-import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
-import { refreshTokenSchema, signinSchema, signupSchema } from './auth.validation';
+import {
+  refreshTokenSchema,
+  signinSchema,
+  signupSchema,
+} from './auth.validation';
 import { SigninDto } from './dto/signin.dto';
 import { JoiValidationPipe } from '../../pipe/joi.pipe';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { Request } from 'express';
+import { AuthGuard } from '../../guard/auth.guard';
 
 @Controller('')
 export class AuthController {
@@ -27,5 +41,12 @@ export class AuthController {
   @UsePipes(new JoiValidationPipe(refreshTokenSchema))
   async refreshToken(@Body() body: RefreshTokenDto) {
     return this._authService.refreshToken(body);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('revoke-refresh-token')
+  @UsePipes(new JoiValidationPipe(refreshTokenSchema))
+  async revokeRefreshToken(@Req() req: Request, @Body() body: RefreshTokenDto) {
+    return this._authService.revokeRefreshToken(req, body);
   }
 }

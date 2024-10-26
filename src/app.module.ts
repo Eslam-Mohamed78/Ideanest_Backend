@@ -10,10 +10,12 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './module/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { OrganizationModule } from './module/organization/organization.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -32,6 +34,16 @@ import { OrganizationModule } from './module/organization/organization.module';
       ],
     }),
     JwtModule.register({ global: true }),
+    CacheModule.registerAsync({
+      useFactory: async (configService: ConfigService) => ({
+        store: await redisStore({
+          url: configService.get('REDIS_URL'),
+          ttl: 0,
+        }),
+      }),
+      isGlobal: true,
+      inject: [ConfigService],
+    }),
     AuthModule,
     OrganizationModule,
   ],

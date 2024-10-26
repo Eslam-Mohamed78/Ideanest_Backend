@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -13,7 +14,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { RefreshTokenRepository } from '../../DataBase/refresh-token/refresh-token.repository';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +23,7 @@ export class AuthService {
     private readonly _i18n: I18nService,
     private readonly _jwtService: JwtService,
     private readonly _userRepository: UserRepository,
-    private readonly _refreshTokenRepository: RefreshTokenRepository,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async signup(body: SignupDto) {
@@ -89,26 +91,48 @@ export class AuthService {
 
   async refreshToken(body: RefreshTokenDto) {
     const { refresh_token } = body;
+    const userId: Types.ObjectId = await this.cacheManager.get(refresh_token);
 
-    const refreshToken = await this._refreshTokenRepository.findOneAndDelete({
-      token: refresh_token,
-      expiry_date: { $gt: new Date() },
-    });
-
-    if (!refreshToken)
+    if (!userId)
       throw new BadRequestException(
         this._i18n.t(`test.INVALID_TOKEN`, {
           lang: I18nContext.current().lang,
         }),
       );
 
-    const userTokens = await this.generateUserToken(refreshToken.user_id);
+    // delete old refresh_token
+    await this.cacheManager.del(refresh_token);
+
+    const userTokens = await this.generateUserToken(userId);
 
     return {
-      message: `${this._i18n.t(`test.REFRESH_TOKEN`, {
+      message: `${this._i18n.t(`test.TOKEN_REFRESHED`, {
         lang: I18nContext.current().lang,
       })}`,
       ...userTokens,
+    };
+  }
+
+  async revokeRefreshToken(req, body: RefreshTokenDto) {
+    const { refresh_token } = body;
+    const userId = req.user._id;
+
+    const tokenOwner: Types.ObjectId =
+      await this.cacheManager.get(refresh_token);
+
+    if (!tokenOwner || tokenOwner.toString() !== userId.toString())
+      throw new BadRequestException(
+        this._i18n.t(`test.INVALID_TOKEN`, {
+          lang: I18nContext.current().lang,
+        }),
+      );
+
+    await this.cacheManager.del(refresh_token);
+
+    return {
+      message: `${this._i18n.t(`test.REFRESH_TOKEN_REVOKED`, {
+        lang: I18nContext.current().lang,
+      })}`,
     };
   }
 
@@ -123,19 +147,20 @@ export class AuthService {
 
     const refresh_token = uuidv4();
 
-    await this.storeRefreshToken(userId, refresh_token);
+    await this.storeRefreshToken(
+      userId,
+      refresh_token,
+      3 * 24 * 60 * 60 * 1000,
+    );
 
     return { access_token, refresh_token };
   }
 
-  async storeRefreshToken(userId: Types.ObjectId, refreshToken: string) {
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 3); // after 3 days from now
-
-    await this._refreshTokenRepository.create({
-      token: refreshToken,
-      user_id: userId,
-      expiry_date: expiryDate,
-    });
+  async storeRefreshToken(
+    userId: Types.ObjectId,
+    refreshToken: string,
+    expiresIn: number,
+  ) {
+    await this.cacheManager.set(refreshToken, userId, expiresIn);
   }
 }

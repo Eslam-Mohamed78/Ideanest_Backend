@@ -46,7 +46,7 @@ export class OrganizationController {
   @Roles(UserRole.READ_ONLY)
   @UsePipes(new JoiValidationPipe(organizationIdSchema))
   async readOrganization(
-    @Req() req:Request,
+    @Req() req: Request,
     @Param('organization_id') organization_id: Types.ObjectId,
   ) {
     return this._organizationService.readOrganization(req, organization_id);

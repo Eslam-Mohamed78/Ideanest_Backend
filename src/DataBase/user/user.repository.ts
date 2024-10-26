@@ -18,6 +18,16 @@ export class UserRepository {
     return await this._userModel.findOne(object);
   }
 
+  async findOneAndUpdate(
+    query: object,
+    object: object,
+  ): Promise<User> {
+    return this._userModel.findOneAndUpdate(query, object, {
+      new: true,
+      useFindAndModify: false,
+    });
+  }
+
   async findById(object: object): Promise<User> {
     return await this._userModel.findById(object);
   }
