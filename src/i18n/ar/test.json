@@ -4,5 +4,11 @@
   "SIGNIN_SUCCESS": "تم تسجيل الدخول بنجاح",
   "INVALID_CREDENTIALS": "بيانات الدخول غير صحيحة",
   "FORBIDDEN_RESOURCE": "غير مسموح لك بالوصول",
-  "UNAUTHORIZED": "غير مصرح"
+  "UNAUTHORIZED": "غير مصرح",
+  "NOT_FOUND_ENTITY": "البيانات غير موجودة",
+  "USER_NOT_FOUND": "المستخدم غير موجود",
+  "USER_INVITATION_SUCCESS": "تم دعوة المستخدم بنجاح",
+  "NO_DATA_PROVIDED_TO_UPDATE": "لا توجد بيانات لتحديثها",
+  "ORGANIZATION_DELETION_SUCCESS": "تم حذف المنظمة بنجاح",
+  "YOU_ARE_NOT_A_MEMBER": "لست عضو في المنظمة"
 }

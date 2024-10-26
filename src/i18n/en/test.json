@@ -4,5 +4,11 @@
   "SIGNIN_SUCCESS": "Signin success",
   "INVALID_CREDENTIALS": "Invalid credentials",
   "FORBIDDEN_RESOURCE": "Forbidden Resource",
-  "UNAUTHORIZED": "Unauthorized"
+  "UNAUTHORIZED": "Unauthorized",
+  "NOT_FOUND_ENTITY": "Not found entity",
+  "USER_NOT_FOUND": "User not found",
+  "USER_INVITATION_SUCCESS": "User invitation success",
+  "NO_DATA_PROVIDED_TO_UPDATE": "No data provided to update",
+  "ORGANIZATION_DELETION_SUCCESS": "Organization deletion success",
+  "YOU_ARE_NOT_A_MEMBER": "You are not a member"
 }

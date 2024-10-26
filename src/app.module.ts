@@ -13,6 +13,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './module/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { OrganizationModule } from './module/organization/organization.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     JwtModule.register({ global: true }),
     AuthModule,
+    OrganizationModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
