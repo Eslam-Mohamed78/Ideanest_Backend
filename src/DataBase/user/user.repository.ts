@@ -17,4 +17,12 @@ export class UserRepository {
   async findOne(object: object): Promise<User> {
     return await this._userModel.findOne(object);
   }
+
+  async findById(object: object): Promise<User> {
+    return await this._userModel.findById(object);
+  }
+
+  async findOneWithPassword(object: object): Promise<User> {
+    return await this._userModel.findOne(object).select('+password');
+  }
 }

@@ -48,11 +48,11 @@ export class AuthService {
   async signin(body: SigninDto) {
     const { email, password } = body;
 
-    const isUserExists = await this._userRepository.findOne({
+    const isUserExists = await this._userRepository.findOneWithPassword({
       email,
     });
 
-    if (isUserExists)
+    if (!isUserExists)
       throw new BadRequestException(
         this._i18n.t(`test.INVALID_CREDENTIALS`, {
           lang: I18nContext.current().lang,
