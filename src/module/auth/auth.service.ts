@@ -10,6 +10,10 @@ import { UserRepository } from '../../DataBase/user/user.repository';
 import { UserRole } from '../../enum/user.enum';
 import { SigninDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Types } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { RefreshTokenRepository } from '../../DataBase/refresh-token/refresh-token.repository';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +21,7 @@ export class AuthService {
     private readonly _i18n: I18nService,
     private readonly _jwtService: JwtService,
     private readonly _userRepository: UserRepository,
+    private readonly _refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   async signup(body: SignupDto) {
@@ -72,18 +77,65 @@ export class AuthService {
         }),
       );
 
-    const payload = { userId: isUserExists['_id'] };
-
-    const access_token = await this._jwtService.signAsync(payload, {
-      secret: process.env.ACCESS_TOKEN_SECRET,
-    });
+    const userTokens = await this.generateUserToken(isUserExists['_id']);
 
     return {
       message: `${this._i18n.t(`test.SIGNIN_SUCCESS`, {
         lang: I18nContext.current().lang,
       })}`,
-      access_token,
-      refresh_token: '',
+      ...userTokens,
     };
+  }
+
+  async refreshToken(body: RefreshTokenDto) {
+    const { refresh_token } = body;
+
+    const refreshToken = await this._refreshTokenRepository.findOneAndDelete({
+      token: refresh_token,
+      expiry_date: { $gt: new Date() },
+    });
+
+    if (!refreshToken)
+      throw new BadRequestException(
+        this._i18n.t(`test.INVALID_TOKEN`, {
+          lang: I18nContext.current().lang,
+        }),
+      );
+
+    const userTokens = await this.generateUserToken(refreshToken.user_id);
+
+    return {
+      message: `${this._i18n.t(`test.REFRESH_TOKEN`, {
+        lang: I18nContext.current().lang,
+      })}`,
+      ...userTokens,
+    };
+  }
+
+  async generateUserToken(userId: Types.ObjectId) {
+    const access_token = await this._jwtService.signAsync(
+      { userId },
+      {
+        secret: process.env.ACCESS_TOKEN_SECRET,
+        expiresIn: '2h',
+      },
+    );
+
+    const refresh_token = uuidv4();
+
+    await this.storeRefreshToken(userId, refresh_token);
+
+    return { access_token, refresh_token };
+  }
+
+  async storeRefreshToken(userId: Types.ObjectId, refreshToken: string) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 3); // after 3 days from now
+
+    await this._refreshTokenRepository.create({
+      token: refreshToken,
+      user_id: userId,
+      expiry_date: expiryDate,
+    });
   }
 }

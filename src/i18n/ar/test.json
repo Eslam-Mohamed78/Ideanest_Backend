@@ -10,5 +10,6 @@
   "USER_INVITATION_SUCCESS": "تم دعوة المستخدم بنجاح",
   "NO_DATA_PROVIDED_TO_UPDATE": "لا توجد بيانات لتحديثها",
   "ORGANIZATION_DELETION_SUCCESS": "تم حذف المنظمة بنجاح",
-  "YOU_ARE_NOT_A_MEMBER": "لست عضو في المنظمة"
+  "YOU_ARE_NOT_A_MEMBER": "لست عضو في المنظمة",
+  "INVALID_TOKEN": "الرمز غير صالح"
 }

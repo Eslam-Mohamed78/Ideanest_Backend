@@ -20,3 +20,9 @@ export const signinSchema = {
     password: joi.string().required(),
   }),
 };
+
+export const refreshTokenSchema = {
+  body: joi.object({
+    refresh_token: joi.string().required(),
+  }),
+};
