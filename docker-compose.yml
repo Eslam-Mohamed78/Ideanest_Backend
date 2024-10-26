@@ -1,0 +1,30 @@
+version: '3'
+services:
+  ideanest_backend:
+    container_name: ideanest_backend
+    build:
+      context: .
+      target: production
+    environment:
+      - NODE_ENV="production"  
+    ports:
+      - '8080:3000'
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+
+volumes:
+  mongo-db:

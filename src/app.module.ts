@@ -3,12 +3,21 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import * as path from 'path';
-import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+  QueryResolver,
+} from 'nestjs-i18n';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './module/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    // MongooseModule.forRoot(process.env.DB_URL),
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.DB_URL),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
@@ -21,6 +30,8 @@ import { MongooseModule } from '@nestjs/mongoose';
         new HeaderResolver(['x-lang']),
       ],
     }),
+    JwtModule.register({ global: true }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

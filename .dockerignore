@@ -1,0 +1,5 @@
+/node_modules
+/Dockerfile
+/dist
+.env
+docker-compose*
