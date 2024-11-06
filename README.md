@@ -1,9 +1,5 @@
-Here’s a formatted version for your README:
-
+ # IDEANEST_PROJECT
 ---
-
-# IDEANEST_PROJECT
-
 **Author**: Eslam Mohamed Hamed (Backend Engineer)
 
 ## Technologies Used
