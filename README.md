@@ -1,5 +1,5 @@
  # IDEANEST_PROJECT
----
+
 **Author**: Eslam Mohamed Hamed (Backend Engineer)
 
 ## Technologies Used
@@ -27,17 +27,17 @@
 ## Entities and Attributes
 
 ### 1. User
-- `o_id` (ObjectId): Unique identifier for each user.
-- `oname` (string): User's name.
-- `oemail` (string): User's unique email.
-- `opassword` (string): Hashed password for security.
-- `oaccess_level` (string): Enum options `[ read_only, full_access ]`.
+- `_id` (ObjectId): Unique identifier for each user.
+- `name` (string): User's name.
+- `email` (string): User's unique email.
+- `password` (string): Hashed password for security.
+- `access_level` (string): Enum options `[ read_only, full_access ]`.
 
 ### 2. Organization
-- `o_id` (ObjectId): Unique identifier for each organization.
-- `oname` (string): Name of the organization.
-- `odescription` (string): Description of the organization.
-- `oOrganization_members` (array of ObjectId): References the User entity.
+- `_id` (ObjectId): Unique identifier for each organization.
+- `name` (string): Name of the organization.
+- `description` (string): Description of the organization.
+- `Organization_members` (array of ObjectId): References the User entity.
 
 ## Relationships
 - **User to Organization**: Many-to-One relationship, as each organization can have multiple members.
